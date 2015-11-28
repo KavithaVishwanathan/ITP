@@ -1,5 +1,4 @@
 ##General Functions
-
 #to get the text
 def GettingBetweenTags(line, beginTag, endTag):
     if beginTag not in line:
@@ -33,7 +32,6 @@ def FindPageName(text):
 
 
 ##To get text type contents from a html file
-
 #to get the required sectios to pull text content            
 def SplitTextByTags(filePath, search_begin_str, search_end_str):
     
@@ -61,3 +59,52 @@ def GetTextContent():
             pgline = GettingBetweenTags(pgline,">","</")
         contentline = RemoveTags(line)
         print pgline + " " + contentline
+
+
+##To get image source files from a html file
+#to get the image file from 
+def GetImgFile(line):
+    imgFile = []
+    while '<img src="' in line:
+        startpos = line.find('<img src="')
+        endpos = line.find('"',startpos+10)
+        subline = line[startpos:endpos]
+        imgFile.append(subline.replace('<img src="',""))
+        line = line.replace(subline,"")
+    return imgFile
+
+#to get the required sectios to pull text content  
+def SplitImageContent(filePath, search_begin_str, search_image_str, search_end_str):
+    txtfile = open(filePath,"r")
+    contentlist = []
+    content = ""
+    sameContextFlag = 0
+    booleanimg = False
+    
+    line = txtfile.readlines()
+    
+    for i in xrange(len(line)):
+        if(search_begin_str in line[i]) or (sameContextFlag == 1):
+            content = content + line[i].strip()
+            if search_image_str in line[i]:
+                booleanimg = True
+            if i < len(line)-1:
+                if (search_end_str in line[i+1]):
+                    sameContextFlag = 0
+                    if booleanimg == True:
+                        contentlist.append(content.strip())
+                    content = ""
+            sameContextFlag = 1
+    return contentlist
+
+def GetImageContent():
+    contentlist = SplitImageContent("Data/brg001-200.txt", """color="#FF0000">Car """,'<img src="',"""color="#FF0000">Car """)
+    for line in contentlist:
+        pgline = line
+        while (">" in pgline):
+            pgline = GettingBetweenTags(pgline,">","</")
+            
+        imgLine = GetImgFile(line)
+        print pgline
+        print imgLine
+        
