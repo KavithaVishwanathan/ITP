@@ -1,5 +1,5 @@
 ##General Functions
-#to get the text
+#to get the text blah blah
 def GettingBetweenTags(line, beginTag, endTag):
     if beginTag not in line:
         startPos = 0
