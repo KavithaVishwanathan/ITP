@@ -108,3 +108,10 @@ def GetImageContent():
         print pgline
         print imgLine
         
+#mySQL Database connection and Execution
+import MySQLdb
+def DatabaseCommand(command):
+    db = MySQLdb.connect("198.71.225.53","itp2015","*pwd*", "ITP_2015")
+    cur = db.cursor()
+    cur.execute (command)
+    cur.close
